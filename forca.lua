@@ -34,17 +34,30 @@ function get_secret_word(file)
     lines[#lines + 1] = line
   end
   return lines
+     number_lines = pick_word(file, 1)
+end
+
+
+------------------------- get secret word --------------------
+-- pick word from line
+function pick_word(file, line_number)
+   local cont=0
+   for line in io.lines(file) do
+      cont=cont+1
+      if cont==line_number then 
+         return line
+      end
+   end
 end
 
 -- choose a random line number from the file
-
--- pick word from line
-function pick_word(file, line)
-   local n=0
-for l in io.lines(file) do
-   n=n+1
-   if n==line then print(l); break end
+function choose_random_line (file, number_lines)
+   return math.random(2, number_lines)
 end
+---------------------------------------------------------------
+
+
+
 repeat
    io.write("Guess a letter:\n ")
    io.flush()
