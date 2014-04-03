@@ -84,10 +84,10 @@ function analyze_letter()
    repeat
       letter = get_letter()
       guess = analyze_correctness(letter)
-         if guess == true then
-            guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
-         end
-   until guess = true
+      if guess == true then
+         guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
+      end
+      until guess = true
    
    return letter
 end
@@ -127,6 +127,8 @@ function analyze_if_letter_repeated (letter, vector_of_situation_letters)
       return true
    end
 end
+
+
 
 repeat
    io.write("Guess a letter:\n ")

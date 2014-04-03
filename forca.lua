@@ -6,12 +6,14 @@ local cont
 
 function play_game ()
    local secret_word
+   local letter
+
    secret_word = get_secret_word()
    
    local try = 0
    while try < 5 do
-      get_letter()
-      print_word()
+      letter = get_valid_letter()
+      upload_word(letter)
    end
 end
 io.write("Write a word:\n ")
@@ -77,7 +79,7 @@ end
 ---------------------------------------------------------------
 
 --analyze letter
-function analyze_letter()
+function get_valid_letter()
    local letter
    local guess = false
 
@@ -127,6 +129,8 @@ function analyze_if_letter_repeated (letter, vector_of_situation_letters)
       return true
    end
 end
+
+
 
 repeat
    io.write("Guess a letter:\n ")
