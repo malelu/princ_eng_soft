@@ -2,18 +2,19 @@ local answer
 local letter
 local cont
 
-
-
 function play_game ()
    local secret_word
    local letter
+   local vector_of_situation_letters = {}
+
+   initialize_vector(vector_of_situation_letters)
 
    secret_word = get_secret_word()
    
    local try = 0
    while try < 5 do
       letter = get_valid_letter()
-      upload_word(letter)
+      upload_word(letter, secret_word, vector_of_situation_letters)
    end
 end
 io.write("Write a word:\n ")
@@ -24,17 +25,12 @@ cont = 0
 
 
 
--- get all lines from a file, returns an empty 
--- list/table if the file does not exist
-function lines_from(file)
-  if not file_exists(file) then return {} end
-  lines = {}
-  for line in io.lines(file) do 
-    lines[#lines + 1] = line
-  end
-  return lines
+--initialize vector
+function initialize_vector(vector)
+   for index = 1, 26 do
+      vector[index] = 0
+   end
 end
-
 
 -- get random word from the file
 function get_secret_word()
@@ -78,7 +74,7 @@ function choose_random_line (file, number_lines)
 end
 ---------------------------------------------------------------
 
---analyze letter
+--get valid letter
 function get_valid_letter()
    local letter
    local guess = false
@@ -94,6 +90,7 @@ function get_valid_letter()
    return letter
 end
    
+------------------------- get valid letter --------------------
 --get letter and return
 function get_letter ()
    local letter
@@ -130,6 +127,31 @@ function analyze_if_letter_repeated (letter, vector_of_situation_letters)
    end
 end
 
+---------------------------------------------------------------
+
+-- upload vector_of_situation_letters with a given valid letter
+function upload_word (letter, word, vector_of_situation_letters)
+   for each_letter in word do
+      if each_letter == letter then
+         vector_of_situation_letters[letter-65] == 1
+         break
+      end
+   end 
+   if vector_of_situation_letters[letter-65] == 0 then
+      vector_of_situation_letters[letter-65] == -1
+end
+
+
+---------------------------------------------------------------
+function print_secret_word (word, vector_of_situation_letters)
+
+   for letter in word do
+      if vector_of_situation_letters[letter-65] == 1 then
+         io.write(letter)
+      else
+         io.write("_")
+      end 
+end
 
 
 repeat
