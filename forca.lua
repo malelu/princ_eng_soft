@@ -10,7 +10,7 @@ function initialize_vector(vector)
    end
 end
 
-
+-------------------------------------------------------------
 ------------------------- get secret word --------------------
 
 -- see if the file exists
@@ -55,22 +55,6 @@ function get_secret_word()
 end
 
 ----------------------------------------------------------------
---get valid letter
-function get_valid_letter()
-   local letter
-   local guess = false
-
-   repeat
-      letter = get_letter()
-      guess = analyze_correctness(letter)
-      if guess == true then
-         guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
-      end
-   until guess == true
-   
-   return letter
-end
-   
 ------------------------- get valid letter --------------------
 --get letter and return
 function get_letter ()
@@ -100,7 +84,7 @@ end
 --se for -1, tentou e nao acertou
 --analyze if the letter is repeated
 function analyze_if_letter_repeated (letter, vector_of_situation_letters)
-   if vector_of_situation_of_letters[letter-65] ~= 0 then 
+   if vector_of_situation_letters[string.byte(letter)-64] ~= 0 then 
       io.write("You already chose this letter\n")
       return false
    else
@@ -108,6 +92,23 @@ function analyze_if_letter_repeated (letter, vector_of_situation_letters)
    end
 end
 
+---------------------------------------------------------------
+--get valid letter
+function get_valid_letter()
+   local letter
+   local guess = false
+
+   repeat
+      letter = get_letter()
+      guess = analyze_correctness(letter)
+      if guess == true then
+         guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
+      end
+   until guess == true
+   
+   return letter
+end
+---------------------------------------------------------------- 
 ---------------------------------------------------------------
 
 -- check the situiation of the word being uploaded
