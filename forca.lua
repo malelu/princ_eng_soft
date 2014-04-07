@@ -109,28 +109,19 @@ function get_valid_letter()
    return letter
 end
 ---------------------------------------------------------------- 
----------------------------------------------------------------
-
--- check the situiation of the word being uploaded
-function check_word_correctness (letter, word, vector_of_situation_letters)
-   upload_word (letter, word, vector_of_situation_letters)
-   print_secret_word (word, vector_of_situation_letters)
-   return check_word_is_done (word, vector_of_situation_letters)
-end
-
 -------check word correctness --------------------------------
 
 -- upload vector_of_situation_letters with a given valid letter
 function upload_word (letter, word, vector_of_situation_letters)
-   for each_letter in word do
+   for each_letter in string.gmatch(word, "%a+") do
       if each_letter == letter then
-         vector_of_situation_letters[letter-65] = 1
+         vector_of_situation_letters[string.byte(letter)-64] = 1
          break
       end
    end 
    -- in case the letter is not in the word
-   if vector_of_situation_letters[letter-65] == 0 then
-      vector_of_situation_letters[letter-65] = -1
+   if vector_of_situation_letters[string.byte(letter)-64] == 0 then
+      vector_of_situation_letters[string.byte(letter)-64] = -1
    end
 end
 
@@ -139,7 +130,7 @@ end
 -- print secret word and check if its complete
 function print_secret_word (word, vector_of_situation_letters)
    for letter in word do
-      if vector_of_situation_letters[letter-65] == 1 then
+      if vector_of_situation_letters[string.byte(letter)-64] == 1 then
          io.write(letter)
       else
          io.write("_")
@@ -152,7 +143,7 @@ end
 function check_word_is_done (word, vector_of_situation_letters)
    local correct = true
    for letter in word do
-      if vector_of_situation_letters[letter-65] == 1 then
+      if vector_of_situation_letters[string.byte(letter)-64] == 1 then
          io.write(letter)
       else
          io.write("_")
@@ -161,6 +152,16 @@ function check_word_is_done (word, vector_of_situation_letters)
    end
    return correct
 end
+---------------------------------------------------------------
+-- check the situiation of the word being uploaded
+function check_word_correctness (letter, word, vector_of_situation_letters)
+   upload_word (letter, word, vector_of_situation_letters)
+   print_secret_word (word, vector_of_situation_letters)
+   return check_word_is_done (word, vector_of_situation_letters)
+end
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
 
 
 --function play_game ()
@@ -180,7 +181,7 @@ end
          letter = get_valid_letter()
          try = try + 1
          upload_word(letter, secret_word, vector_of_situation_letters)
-         word_correct = check_word_correctness (letter, word, vector_of_situation_letters)
+         word_correct = check_word_correctness (letter, secret_word, vector_of_situation_letters)
       end
 
       if word_correct == true then
