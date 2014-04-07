@@ -1,7 +1,3 @@
---local answer
---local letter
---local cont
-
 
 --initialize vector
 function initialize_vector(vector)
@@ -112,7 +108,7 @@ end
 -------check word correctness --------------------------------
 
 -- upload vector_of_situation_letters with a given valid letter
-function upload_word (letter, word, vector_of_situation_letters)
+function upload_word (letter, word, vector_of_situation_letters, try)
    for each_letter in string.gmatch(word, "%a") do
       if each_letter == letter then
          vector_of_situation_letters[string.byte(letter)-64] = 1
@@ -122,7 +118,9 @@ function upload_word (letter, word, vector_of_situation_letters)
    -- in case the letter is not in the word
    if vector_of_situation_letters[string.byte(letter)-64] == 0 then
       vector_of_situation_letters[string.byte(letter)-64] = -1
+      try = try + 1
    end
+   return try
 end
 
 
@@ -130,10 +128,11 @@ end
 -- print secret word and check if its complete
 function print_secret_word (word, vector_of_situation_letters)
    
-   print(word)
-   for letter in string.gmatch(word, "%a") do
+   for letter in string.gmatch(word, ".") do
       if vector_of_situation_letters[string.byte(letter)-64] == 1 then
          io.write(letter)
+      elseif letter == " " then
+         io.write(" ")
       else
          io.write("_")
       end 
@@ -154,16 +153,14 @@ function check_word_is_done (word, vector_of_situation_letters)
    return correct
 end
 ---------------------------------------------------------------
--- check the situiation of the word being uploaded
+-- check the situation of the word being uploaded
 function check_word_correctness (letter, word, vector_of_situation_letters)
-   upload_word (letter, word, vector_of_situation_letters)
+   --upload_word (letter, word, vector_of_situation_letters)
    print_secret_word (word, vector_of_situation_letters)
    return check_word_is_done (word, vector_of_situation_letters)
 end
 -------------------------------------------------------------------
 -------------------------------------------------------------------
-
-
 
 --function play_game ()
    local secret_word
@@ -179,10 +176,9 @@ end
    
       local try = 0
       while try < 5 and word_correct == false do
-         letter = get_valid_letter()        
-         upload_word(letter, secret_word, vector_of_situation_letters)
+         letter = get_valid_letter()   
+         try = upload_word (letter, secret_word, vector_of_situation_letters, try)     
          word_correct = check_word_correctness (letter, secret_word, vector_of_situation_letters)
-         try = try + 1
          print(try)
       end
 
@@ -195,31 +191,6 @@ end
       io.write("Do you want to play a again? [y/n]")
       play_game = io.read()
    until play_game == "n"
---end
 
---io.write("Write a word:\n ")
---io.flush()
---word=io.read()
---cont = 0
-
-
-
-
-
-
-
---repeat
-   --io.write("Guess a letter:\n ")
-   --io.flush()
-   --letter=io.read()
-
-   --if #letter == 1 then
-     -- io.write(letter)
-      --io.write("\n")
-     -- cont = cont + 1
-   --else
-    --  io.write("Please guess only one letter at a time\n")
-   --end
---until cont > 5
 
 
