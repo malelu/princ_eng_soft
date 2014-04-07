@@ -21,12 +21,13 @@ function file_exists(file)
 end
 
 -- pick word from line
-function pick_word(file, line_number)
+function pick_word(filename, line_number)
    local cont=0
-   for line in io.lines(file) do
+   for line in io.lines(filename) do
       cont=cont+1
       if cont==line_number then 
-         return line
+         --print(line)
+         return line;
       end
    end
 end
@@ -38,15 +39,17 @@ end
 ---------------------------------------------------------------
 -- get random word from the file
 function get_secret_word()
-
-   local name_file = "words.txt" 
+   local filename = "words.txt" 
+   file = file_exists(filename)
 	--pegar o file do retorno da funcao
-   if not file_exists(name_file) then 
+   --if not file_exists(name_file) then
+   if not file then 
       return {} 
    end
-   number_lines = pick_word(file, 1)
+   
+   number_lines = pick_word(filename, 1)
    chosen_line = choose_random_line (file, number_lines)
-   chosen_word = pick_word(file, chosen_line)
+   chosen_word = pick_word(filename, chosen_line)
    
    return chosen_word
 end

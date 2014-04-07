@@ -1,14 +1,22 @@
 filename = "words.txt"
 fp = io.open( filename, "r" )
-local number_of_lines = fp.readline()
-print(number_of_lines)
+lineno = 3
+local n=0
+for l in io.lines(filename) do
+   n=n+1
+   if n==lineno then print(l); break end
+end
 
---lineno = 3
---local n=0
---for l in io.lines(filename) do
---   n=n+1
---   if n==lineno then print(l); break end
---end
+
+function pick_word(filename, line_number)
+   local cont=0
+   for line in io.lines(filename) do
+      cont=cont+1
+      if cont==line_number then 
+         return line;
+      end
+   end
+end
 
 
 
