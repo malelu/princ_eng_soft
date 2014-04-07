@@ -113,12 +113,7 @@ end
 
 -- upload vector_of_situation_letters with a given valid letter
 function upload_word (letter, word, vector_of_situation_letters)
-   print(word)
-   print("oi")
-   print(word)
-   print("ola")
-   print(word)
-   for each_letter in string.gmatch(word, "%a+") do
+   for each_letter in string.gmatch(word, "%a") do
       if each_letter == letter then
          vector_of_situation_letters[string.byte(letter)-64] = 1
          break
@@ -134,25 +129,26 @@ end
 ---------------------------------------------------------------
 -- print secret word and check if its complete
 function print_secret_word (word, vector_of_situation_letters)
-   for letter in word do
+   
+   print(word)
+   for letter in string.gmatch(word, "%a") do
       if vector_of_situation_letters[string.byte(letter)-64] == 1 then
          io.write(letter)
       else
          io.write("_")
       end 
    end
+   io.write("\n")
 end
 
 ---------------------------------------------------------------
--- check if all letters were guesses right
+-- check if all letters were guessed right
 function check_word_is_done (word, vector_of_situation_letters)
    local correct = true
-   for letter in word do
-      if vector_of_situation_letters[string.byte(letter)-64] == 1 then
-         io.write(letter)
-      else
-         io.write("_")
+   for letter in string.gmatch(word, "%a") do
+      if vector_of_situation_letters[string.byte(letter)-64] ~= 1 then
          correct = false
+         break
       end 
    end
    return correct
@@ -160,7 +156,6 @@ end
 ---------------------------------------------------------------
 -- check the situiation of the word being uploaded
 function check_word_correctness (letter, word, vector_of_situation_letters)
-   print ("oooooooo")
    upload_word (letter, word, vector_of_situation_letters)
    print_secret_word (word, vector_of_situation_letters)
    return check_word_is_done (word, vector_of_situation_letters)
@@ -183,12 +178,12 @@ end
       secret_word = get_secret_word()
    
       local try = 0
-      while try < 5 or word_correct == false do
-         letter = get_valid_letter()
-         try = try + 1
-         print ("ooooooo3333333333o")
+      while try < 5 and word_correct == false do
+         letter = get_valid_letter()        
          upload_word(letter, secret_word, vector_of_situation_letters)
          word_correct = check_word_correctness (letter, secret_word, vector_of_situation_letters)
+         try = try + 1
+         print(try)
       end
 
       if word_correct == true then
