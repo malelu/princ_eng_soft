@@ -22,7 +22,6 @@ function pick_word(filename, line_number)
    for line in io.lines(filename) do
       cont=cont+1
       if cont==line_number then 
-         --print(line)
          return line;
       end
    end
@@ -167,10 +166,11 @@ end
    local secret_word
    local letter
    vector_of_situation_letters = {}
-   local word_correct = false
-   local play_game = "y"
+   --local word_correct = false
+   local play_game = "Y"
 
    repeat
+      local word_correct = false
       initialize_vector(vector_of_situation_letters)
 
       secret_word = get_secret_word()
@@ -189,9 +189,12 @@ end
          io.write("Too bad. You lost :(")
       end
    
-      io.write("Do you want to play a again? [y/n]")
-      play_game = io.read()
-   until play_game == "n"
+      repeat
+         io.write("Do you want to play a again? [Y/N]")
+         play_game = io.read()
+      until play_game == "N" or play_game == "Y"
+
+   until play_game == "N"
 
 
 

@@ -22,7 +22,6 @@ function pick_word(filename, line_number)
    for line in io.lines(filename) do
       cont=cont+1
       if cont==line_number then 
-         --print(line)
          return line;
       end
    end
@@ -30,11 +29,8 @@ end
 
 -- choose a random line number from the file (not considering the first line)
 function choose_random_line (file, number_lines)
-   print(number_lines)
-   u = math.random(2, number_lines)
-   print (u)
-   return u
-   --return math.random(2, number_lines)
+   math.randomseed(os.time())
+   return math.random(2, number_lines)
 end
 ---------------------------------------------------------------
 -- get random word from the file
@@ -170,10 +166,11 @@ end
    local secret_word
    local letter
    vector_of_situation_letters = {}
-   local word_correct = false
-   local play_game = "y"
+   --local word_correct = false
+   local play_game = "Y"
 
    repeat
+      local word_correct = false
       initialize_vector(vector_of_situation_letters)
 
       secret_word = get_secret_word()
@@ -192,9 +189,9 @@ end
          io.write("Too bad. You lost :(")
       end
    
-      io.write("Do you want to play a again? [y/n]")
+      io.write("Do you want to play a again? [Y/N]")
       play_game = io.read()
-   until play_game == "n"
+   until play_game == "N"
 
 
 
