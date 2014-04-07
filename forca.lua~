@@ -1,42 +1,6 @@
-local answer
-local letter
-local cont
-
-function play_game ()
-   local secret_word
-   local letter
-   local vector_of_situation_letters = {}
-   local word_correct = false
-   local play_game = "y"
-
-   repeat
-      initialize_vector(vector_of_situation_letters)
-
-      secret_word = get_secret_word()
-   
-      local try = 0
-      while try < 5 or word_correct == false do
-         letter = get_valid_letter()
-         try = try + 1
-         upload_word(letter, secret_word, vector_of_situation_letters)
-         word_correct = check_word_correctness (letter, word, vector_of_situation_letters)
-      end
-
-      if word_correct == true then
-         io.write("Congratulations! You guessed the word!")
-      else
-         io.write("Too bad. You lost :(")
-      end
-   
-      io.write("Do you want to play a again? [y/n]")
-      play_game = io.read()
-   until play_game == "n"
-end
-
-io.write("Write a word:\n ")
-io.flush()
-word=io.read()
-cont = 0
+--local answer
+--local letter
+--local cont
 
 
 --initialize vector
@@ -46,20 +10,7 @@ function initialize_vector(vector)
    end
 end
 
--- get random word from the file
-function get_secret_word()
 
-   local name_file = "words.txt" 
-	--pegar o file do retorno da funcao
-   if not file_exists(name_file) then 
-      return {} 
-   end
-   number_lines = pick_word(file, 1)
-   chosen_line = choose_random_line (file, number_lines)
-   chosen_word = pick_word(file, chosen_line)
-   
-   return chosen_word
-end
 
 
 ------------------------- get secret word --------------------
@@ -87,7 +38,22 @@ function choose_random_line (file, number_lines)
    return math.random(2, number_lines)
 end
 ---------------------------------------------------------------
+-- get random word from the file
+function get_secret_word()
 
+   local name_file = "words.txt" 
+	--pegar o file do retorno da funcao
+   if not file_exists(name_file) then 
+      return {} 
+   end
+   number_lines = pick_word(file, 1)
+   chosen_line = choose_random_line (file, number_lines)
+   chosen_word = pick_word(file, chosen_line)
+   
+   return chosen_word
+end
+
+----------------------------------------------------------------
 --get valid letter
 function get_valid_letter()
    local letter
@@ -99,7 +65,7 @@ function get_valid_letter()
       if guess == true then
          guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
       end
-   until guess = true
+   until guess == true
    
    return letter
 end
@@ -118,7 +84,7 @@ function analyze_correctness (letter)
    if #letter == 1 then
       if letter >= 'A' and letter <= 'Z' then
          return true 
-      else if letter >= 'a' and letter <= 'z' then
+      elseif letter >= 'a' and letter <= 'z' then
          io.write("Please use uppercase letter\n")
       else 
          io.write("Please guess a letter from the alphabet\n")
@@ -156,12 +122,14 @@ end
 function upload_word (letter, word, vector_of_situation_letters)
    for each_letter in word do
       if each_letter == letter then
-         vector_of_situation_letters[letter-65] == 1
+         vector_of_situation_letters[letter-65] = 1
          break
       end
    end 
+   -- in case the letter is not in the word
    if vector_of_situation_letters[letter-65] == 0 then
-      vector_of_situation_letters[letter-65] == -1
+      vector_of_situation_letters[letter-65] = -1
+   end
 end
 
 
@@ -174,6 +142,7 @@ function print_secret_word (word, vector_of_situation_letters)
       else
          io.write("_")
       end 
+   end
 end
 
 ---------------------------------------------------------------
@@ -187,22 +156,65 @@ function check_word_is_done (word, vector_of_situation_letters)
          io.write("_")
          correct = false
       end 
+   end
    return correct
 end
 
 
-repeat
-   io.write("Guess a letter:\n ")
-   io.flush()
-   letter=io.read()
+--function play_game ()
+   local secret_word
+   local letter
+   vector_of_situation_letters = {}
+   local word_correct = false
+   local play_game = "y"
 
-   if #letter == 1 then
-      io.write(letter)
-      io.write("\n")
-      cont = cont + 1
-   else
-      io.write("Please guess only one letter at a time\n")
-   end
-until cont > 5
+   repeat
+      initialize_vector(vector_of_situation_letters)
+
+      secret_word = get_secret_word()
+   
+      local try = 0
+      while try < 5 or word_correct == false do
+         letter = get_valid_letter()
+         try = try + 1
+         upload_word(letter, secret_word, vector_of_situation_letters)
+         word_correct = check_word_correctness (letter, word, vector_of_situation_letters)
+      end
+
+      if word_correct == true then
+         io.write("Congratulations! You guessed the word!")
+      else
+         io.write("Too bad. You lost :(")
+      end
+   
+      io.write("Do you want to play a again? [y/n]")
+      play_game = io.read()
+   until play_game == "n"
+--end
+
+--io.write("Write a word:\n ")
+--io.flush()
+--word=io.read()
+--cont = 0
+
+
+
+
+
+
+
+--repeat
+   --io.write("Guess a letter:\n ")
+   --io.flush()
+   --letter=io.read()
+
+   --if #letter == 1 then
+     -- io.write(letter)
+      --io.write("\n")
+     -- cont = cont + 1
+   --else
+    --  io.write("Please guess only one letter at a time\n")
+   --end
+--until cont > 5
 
 
