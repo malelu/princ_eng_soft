@@ -30,6 +30,7 @@ end
 
 -- choose a random line number from the file (not considering the first line)
 function choose_random_line (file, number_lines)
+   math.randomseed(os.time())
    return math.random(2, number_lines)
 end
 ---------------------------------------------------------------
@@ -179,7 +180,7 @@ end
          letter = get_valid_letter()   
          try = upload_word (letter, secret_word, vector_of_situation_letters, try)     
          word_correct = check_word_correctness (letter, secret_word, vector_of_situation_letters)
-         print(try)
+         print("tries:", try)
       end
 
       if word_correct == true then
