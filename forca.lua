@@ -166,7 +166,7 @@ function get_valid_letter()
 end
 
 
-function upload_word (letter, word, vector_of_situation_letters, try)
+function update_vector (letter, word, vector_of_situation_letters)--, try)
 ------------------------------------------------
 -- Upload vector_of_situation_letters with a given valid letter.
 -- If the letter is part of the word, upload vector_of_situation_letters
@@ -194,7 +194,7 @@ function upload_word (letter, word, vector_of_situation_letters, try)
 end
 
 
-function print_secret_word (word, vector_of_situation_letters)
+function print_vector (word, vector_of_situation_letters)
 ------------------------------------------------
 -- Print secret word on the screen. If the letter has not
 -- been guessed yet, print _.
@@ -234,7 +234,7 @@ function check_word_is_done (word, vector_of_situation_letters)
 end
 
 
-function check_word_correctness (letter, word, vector_of_situation_letters)
+function check_word_correctness (letter, word, vector_of_situation_letters)--, try)
 ------------------------------------------------
 -- Check the situation of the word being uploaded.
 -- Parameter:
@@ -245,43 +245,45 @@ function check_word_correctness (letter, word, vector_of_situation_letters)
 --    true if all letters were were guessed
 --    false if not 
 -----------------------------------------------
-   --upload_word (letter, word, vector_of_situation_letters)
-   print_secret_word (word, vector_of_situation_letters)
-   return check_word_is_done (word, vector_of_situation_letters)
+   local game_won
+   try = update_vector (letter, word, vector_of_situation_letters)--, try)
+   print(try)
+   print_vector (word, vector_of_situation_letters)
+   game_won = check_word_is_done (word, vector_of_situation_letters)
+
+   if game_won == true then
+      io.write("Congratulations! You guessed the word!\n")
+      return true
+   elseif try > 5 then
+      io.write("Too bad. You lost :(\n")
+      io.write("Correct word: ", word, "\n")
+      return true
+   else
+      return false
+   end
 end
 
 
 
--------------------------------------------------------------------
--------------------------------------------------------------------
-
 --function play_game ()
    local secret_word
    local letter
-   vector_of_situation_letters = {}
-   --local word_correct = false
+   vector_of_situation_letters = {}  
    local play_game = "Y"
 
    repeat
-      local word_correct = false
-      initialize_vector(vector_of_situation_letters)
+      try = 0
+      local end_game = false
 
+      initialize_vector(vector_of_situation_letters)
       secret_word = get_secret_word()
-   
-      local try = 0
-      while try < 5 and word_correct == false do
-         letter = get_valid_letter()   
-         try = upload_word (letter, secret_word, vector_of_situation_letters, try)     
-         word_correct = check_word_correctness (letter, secret_word, vector_of_situation_letters)
+
+      while not end_game do
+         letter = get_valid_letter()      
+         end_game = check_word_correctness (letter, secret_word, vector_of_situation_letters)
          print("tries:", try)
       end
 
-      if word_correct == true then
-         io.write("Congratulations! You guessed the word!\n")
-      else
-         io.write("Too bad. You lost :(\n")
-      end
-   
       repeat
          io.write("Do you want to play a again? [Y/N]")
          play_game = io.read()
