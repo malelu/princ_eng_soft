@@ -89,7 +89,9 @@ end
 
 function get_secret_word()
 -----------------------------------------------------------
--- Get random word from the file to be the secret word.
+-- Get random word from the file to be the secret word. If
+-- it tries to get more than five times a valid word, exits
+-- the program.
 -- Return:
 --    chosen_word: variable containing the chosen word
 --    picked from a line
@@ -106,11 +108,9 @@ function get_secret_word()
    repeat
       number_lines = get_word_from_line(filename, 1)
       chosen_line = choose_random_line (file, number_lines)
-      --secret_word = get_word_from_line(filename, chosen_line)
-      secret_word = get_word_from_line(filename, 2)
+      secret_word = get_word_from_line(filename, chosen_line)
       secret_word_correctness = analyze_secret_word_correctness (secret_word)
       number_tries = number_tries + 1
-      print(number_tries)
       if number_tries > 5 then
          io.write("please analyze your words.txt file. Too many invalid words\n")
          os.exit() 
@@ -137,7 +137,7 @@ end
 
 
 
-function analyze_correctness (letter)
+function analyze_letter_correctness (letter)
 ------------------------------------------------
 -- Analyze if the input is a single uppercase letter
 -- Parameter:
@@ -196,7 +196,7 @@ function get_valid_letter()
 
    repeat
       letter = get_letter()
-      valid_guess = analyze_correctness(letter)
+      valid_guess = analyze_letter_correctness(letter)
       if valid_guess == true then
          valid_guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
       end

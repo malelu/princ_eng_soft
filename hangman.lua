@@ -67,6 +67,7 @@ function choose_random_line (file, number_lines)
 end
 
 
+
 function analyze_secret_word_correctness (secret_word)
 ------------------------------------------------
 -- Analyze if the chosen secret word is valid, considering the
@@ -89,7 +90,9 @@ end
 
 function get_secret_word()
 -----------------------------------------------------------
--- Get random word from the file to be the secret word.
+-- Get random word from the file to be the secret word. If
+-- it tries to get more than five times a valid word, exits
+-- the program.
 -- Return:
 --    chosen_word: variable containing the chosen word
 --    picked from a line
@@ -135,7 +138,7 @@ end
 
 
 
-function analyze_correctness (letter)
+function analyze_letter_correctness (letter)
 ------------------------------------------------
 -- Analyze if the input is a single uppercase letter
 -- Parameter:
@@ -194,7 +197,7 @@ function get_valid_letter()
 
    repeat
       letter = get_letter()
-      valid_guess = analyze_correctness(letter)
+      valid_guess = analyze_letter_correctness(letter)
       if valid_guess == true then
          valid_guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
       end
