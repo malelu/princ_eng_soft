@@ -3,8 +3,6 @@
 --	1011010
 ------------------------------------------------
 
-
-
 function initialize_vector(vector)
 --------------------------------------------
 --Initialize a vector from index 0 to 26 with
@@ -18,17 +16,21 @@ function initialize_vector(vector)
 end
 
 
-------------------------- get secret word --------------------
-
--- see if the file exists
 function file_exists(file)
+----------------------------------------------------
+--   Check if the file exists
+--   Parameters:
+--      file: name of the file
+--   Return:
+--      new_file : opened file, if it's not nil
+-----------------------------------------------------
   local new_file = io.open(file, "rb")
   if new_file then new_file:close() end
   return new_file ~= nil
 end
 
 
-function pick_word(filename, line_number)
+function pick_secret_word(filename, line_number)
 ----------------------------------------------------
 --   Return a word from a pre defined line in a file
 --   Parameters:
@@ -70,20 +72,17 @@ function get_secret_word()
 ----------------------------------------------------------
    local filename = "words.txt" 
    file = file_exists(filename)
-	--pegar o file do retorno da funcao
-   --if not file_exists(name_file) then
    if not file then 
       return {} 
    end
    
-   number_lines = pick_word(filename, 1)
+   number_lines = pick_secret_word(filename, 1)
    chosen_line = choose_random_line (file, number_lines)
-   chosen_word = pick_word(filename, chosen_line)
+   secret_word = pick_secret_word(filename, chosen_line)
    
-   return chosen_word
+   return secret_word
 end
 
-------------------------- get valid letter --------------------
 
 function get_letter ()
 ------------------------------------------------
@@ -125,6 +124,7 @@ function analyze_correctness (letter)
    return false
 end
 
+
 function analyze_if_letter_repeated (letter, vector_of_situation_letters)
 ------------------------------------------------
 -- Analyze if a given valid letter was already guessed
@@ -152,40 +152,39 @@ function get_valid_letter()
 --    letter: valid non repeated letter
 -----------------------------------------------
    local letter
-   local guess = false
+   local valid_guess = false
 
    repeat
       letter = get_letter()
-      guess = analyze_correctness(letter)
-      if guess == true then
-         guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
+      valid_guess = analyze_correctness(letter)
+      if valid_guess == true then
+         valid_guess = analyze_if_letter_repeated (letter, vector_of_situation_letters)
       end
-   until guess == true
+   until valid_guess == true
    
    return letter
 end
 
 
-function update_vector (letter, word, vector_of_situation_letters)--, try)
+function update_vector (letter, secret_word, vector_of_situation_letters)
 ------------------------------------------------
 -- Upload vector_of_situation_letters with a given valid letter.
--- If the letter is part of the word, upload vector_of_situation_letters
+-- If the letter is part of the secret_word, upload vector_of_situation_letters
 -- with 1. If it's not, upload with -1.
 -- Parameter:
 --    letter: variable containing a valid letter
---    word: secret word to be guessed
+--    secret_word: secret word to be guessed
 --    vector_of_situation_letters: vector containing 26 indexes. 
---    try: variable containing the number of tries of the player. 
 -- Return:
---    try
+--    try: variable containing the number of tries of the player.
 -----------------------------------------------
-   for each_letter in string.gmatch(word, "%a") do
-      if each_letter == letter then
+   for character in string.gmatch(secret_word, "%a") do
+      if character == letter then
          vector_of_situation_letters[string.byte(letter)-64] = 1
          break
       end
    end 
-   -- in case the letter is not in the word
+   -- in case the letter is not in the secret_word
    if vector_of_situation_letters[string.byte(letter)-64] == 0 then
       vector_of_situation_letters[string.byte(letter)-64] = -1
       try = try + 1
@@ -194,15 +193,16 @@ function update_vector (letter, word, vector_of_situation_letters)--, try)
 end
 
 
-function print_vector (word, vector_of_situation_letters)
+function print_vector (secret_word, vector_of_situation_letters)
 ------------------------------------------------
--- Print secret word on the screen. If the letter has not
--- been guessed yet, print _.
+-- Print the word being guessed in the screen. If the letter has not
+-- been guessed yet, print _. If it has been guessed, print the
+-- actual letter.
 -- Parameter:
---    word: secret word to be guessed
+--    secret_word: secret word to be guessed
 --    vector_of_situation_letters: vector containing 26 indexes. 
 -----------------------------------------------  
-   for letter in string.gmatch(word, ".") do
+   for letter in string.gmatch(secret_word, ".") do
       if vector_of_situation_letters[string.byte(letter)-64] == 1 then
          io.write(letter)
       elseif letter == " " then
@@ -215,17 +215,17 @@ function print_vector (word, vector_of_situation_letters)
 end
 
 
-function check_word_is_done (word, vector_of_situation_letters)
+function check_word_is_done (secret_word, vector_of_situation_letters)
 ------------------------------------------------
 -- Check if player guessed all the letters of the secret word.
 -- Parameter:
---    word: secret word to be guessed
+--    secret_word: secret word to be guessed
 --    vector_of_situation_letters: vector containing 26 indexes.  
 -- Return:
 --    true if all letters were were guessed
 --    false if not 
 -----------------------------------------------
-   for letter in string.gmatch(word, "%a") do
+   for letter in string.gmatch(secret_word, "%a") do
       if vector_of_situation_letters[string.byte(letter)-64] ~= 1 then
          return false
       end 
@@ -234,29 +234,28 @@ function check_word_is_done (word, vector_of_situation_letters)
 end
 
 
-function check_word_correctness (letter, word, vector_of_situation_letters)--, try)
+function check_vector (letter, secret_word, vector_of_situation_letters)
 ------------------------------------------------
 -- Check the situation of the word being uploaded.
 -- Parameter:
 --    letter: variable containing a valid letter
---    word: secret word to be guessed
+--    secret_word: secret word to be guessed
 --    vector_of_situation_letters: vector containing 26 indexes. 
 -- Return:
 --    true if all letters were were guessed
 --    false if not 
 -----------------------------------------------
    local game_won
-   try = update_vector (letter, word, vector_of_situation_letters)--, try)
-   print(try)
-   print_vector (word, vector_of_situation_letters)
-   game_won = check_word_is_done (word, vector_of_situation_letters)
+   try = update_vector (letter, secret_word, vector_of_situation_letters)
+   print_vector (secret_word, vector_of_situation_letters)
+   game_won = check_word_is_done (secret_word, vector_of_situation_letters)
 
    if game_won == true then
       io.write("Congratulations! You guessed the word!\n")
       return true
-   elseif try > 5 then
+   elseif try >= 5 then
       io.write("Too bad. You lost :(\n")
-      io.write("Correct word: ", word, "\n")
+      io.write("Correct word: ", secret_word, "\n")
       return true
    else
       return false
@@ -280,7 +279,7 @@ end
 
       while not end_game do
          letter = get_valid_letter()      
-         end_game = check_word_correctness (letter, secret_word, vector_of_situation_letters)
+         end_game = check_vector (letter, secret_word, vector_of_situation_letters)
          print("tries:", try)
       end
 
