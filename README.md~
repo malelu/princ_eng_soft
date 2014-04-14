@@ -1,9 +1,9 @@
-=============
 Aluna: Marina Leao Lucena
 Matrícula: 1011010
 Professor: Júlio César Sampaio
 Matéria: Princípios de Engenharia de Software
 ==============
+
 
 ==============
 Arquivos:
@@ -28,4 +28,3 @@ Observações:
 	- Para adicionar palavras ao jogo, basta escrever sua palavra na última linha do arquivo e alterar a primeira 		linha, somando 1. Ela represanta o número de linhas do arquivo.
 	- Todas as palavras secretas devem conter apenas caracteres do alfabeto, em letra maiúscula. Espaço entre as
 	palavras, no caso de ser uma composta - por exemplo, HARRY POTTER - também é permitido.
-==============
