@@ -106,9 +106,11 @@ function get_secret_word()
    repeat
       number_lines = get_word_from_line(filename, 1)
       chosen_line = choose_random_line (file, number_lines)
-      secret_word = get_word_from_line(filename, chosen_line)
+      --secret_word = get_word_from_line(filename, chosen_line)
+      secret_word = get_word_from_line(filename, 2)
       secret_word_correctness = analyze_secret_word_correctness (secret_word)
       number_tries = number_tries + 1
+      print(number_tries)
       if number_tries > 5 then
          io.write("please analyze your words.txt file. Too many invalid words\n")
          os.exit() 
